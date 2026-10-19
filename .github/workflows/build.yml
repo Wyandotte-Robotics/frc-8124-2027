@@ -1,0 +1,45 @@
+name: Build
+
+# Checks that the robot code compiles on every push and pull request.
+# Until the WPILib project is added at kickoff, this just reports that there's nothing to build.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for a WPILib project
+        id: project
+        run: |
+          if [ -f gradlew ]; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No WPILib project yet. It gets added at kickoff." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # Match this to the Java version the WPILib installer uses for the season
+      - uses: actions/setup-java@v4
+        if: steps.project.outputs.found == 'true'
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+        if: steps.project.outputs.found == 'true'
+
+      - name: Build the robot code
+        if: steps.project.outputs.found == 'true'
+        run: |
+          chmod +x gradlew
+          ./gradlew build
