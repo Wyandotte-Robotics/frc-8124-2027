@@ -23,6 +23,7 @@ A programming lead or mentor will:
 2. In VS Code, run **WPILib: Create a new project**: Java, **Command Robot** template, team number **8124**, saved into this repo's folder. ([How to](https://docs.wpilib.org/en/stable/docs/software/vscode-overview/creating-robot-program.html))
 3. Add the vendor libraries for the motors and sensors we choose (**WPILib: Manage Vendor Libraries**).
 4. Commit the new project to `main`, then everyone else works on branches.
+5. Rename this repo after the game (like `frc-8124-<game>`), the same way the FTC repo is named. GitHub redirects the old address.
 
 Once the project is in, the build check below starts running on every pull request.
 
